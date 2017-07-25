@@ -17,6 +17,14 @@ if _MARSHMALLOW_VERSION_INFO[0] >= 3:
     get_value = _get_value
 else:
     def get_value(obj, attr, *args, **kwargs):
+        """
+        This checks if your passing a dot notation
+        string (and assumes this is a foreign key)
+        """
+        if '.' in attr:
+            fk, attr = attr.split('.')
+            obj = getattr(obj, fk).first()
+            
         return _get_value(attr, obj, *args, **kwargs)
 
 _tpl_pattern = re.compile(r'\s*<\s*(\S*)\s*>\s*')
